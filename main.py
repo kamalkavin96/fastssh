@@ -1,3 +1,11 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+TERMINAL_USERNAME = os.getenv("TERMINAL_USERNAME")
+TERMINAL_PASSWORD = os.getenv("TERMINAL_PASSWORD")
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import uvicorn
@@ -17,6 +25,32 @@ async def home():
 async def terminal(websocket: WebSocket):
 
     await websocket.accept()
+    
+    username = ""
+    password = ""
+
+    await websocket.send_text("Username: ")
+    while True:
+        data = await websocket.receive_text()
+        if data in ("\r", "\n"):
+            break
+        username += data
+        print(data)
+        await websocket.send_text(data)
+
+    await websocket.send_text("\r\nPassword: ")
+    while True:
+        data = await websocket.receive_text()
+        if data in ("\r", "\n"):
+            break
+        password += data
+        await websocket.send_text("*")
+
+    if ( username != TERMINAL_USERNAME or password != TERMINAL_PASSWORD):
+        await websocket.send_text("\r\nAuthentication Failed\r\n")
+        await websocket.close()
+        return
+    await websocket.send_text("\r\nAuthentication Successful\r\n")
 
     env = os.environ.copy()
     env["TERM"] = "xterm-256color"
