@@ -7,88 +7,10 @@ import os
 
 app = FastAPI()
 
-HTML = """
-<!DOCTYPE html>
-<html>
-<head>
-
-<meta charset="utf-8">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css">
-
-<script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
-
-<style>
-
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-}
-
-#terminal {
-    width: 100%;
-    height: 100vh;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div id="terminal"></div>
-
-<script>
-
-const term = new Terminal({
-    cursorBlink: true,
-    convertEol: true,
-    rows: 40,
-    cols: 120
-});
-
-term.open(
-    document.getElementById("terminal")
-);
-
-const protocol =
-    location.protocol === "https:"
-        ? "wss:"
-        : "ws:";
-
-const socket = new WebSocket(
-    protocol + "//" + location.host + "/terminal"
-);
-
-socket.onopen = () => {
-    term.write("\\r\\nConnected\\r\\n");
-};
-
-socket.onmessage = (event) => {
-    term.write(event.data);
-};
-
-socket.onclose = () => {
-    term.write("\\r\\nDisconnected\\r\\n");
-};
-
-term.onData((data) => {
-    socket.send(data);
-});
-
-</script>
-
-</body>
-</html>
-"""
-
-
 @app.get("/")
 async def home():
-    return HTMLResponse(HTML)
+    with open("templates/terminal.html", "r", encoding="utf-8") as f:
+        return HTMLResponse(f.read())
 
 
 @app.websocket("/terminal")
