@@ -57,6 +57,12 @@
         term.write("\\r\\nDisconnected\\r\\n");
       };
 
+      term.textarea.addEventListener("paste", (event) => {
+        const text = event.clipboardData.getData("text");
+        socket.send(text);
+        event.preventDefault();
+      });
+
       term.onData((data) => {
         console.log(data, data.charCodeAt(0));
         socket.send(data);

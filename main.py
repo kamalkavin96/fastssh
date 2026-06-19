@@ -80,6 +80,10 @@ async def terminal(websocket: WebSocket):
                 print("CTRL+C")
                 child.sendcontrol("c")
                 continue
+            if data == "\x22":
+                print("CTRL+V")
+                child.sendcontrol("c")
+                continue
             child.send(data)
 
     except WebSocketDisconnect:
