@@ -57,11 +57,40 @@
         term.write("\\r\\nDisconnected\\r\\n");
       };
 
-      term.textarea.addEventListener("paste", (event) => {
-        const text = event.clipboardData.getData("text");
-        socket.send(text);
-        event.preventDefault();
+
+
+
+
+      term.attachCustomKeyEventHandler((e) => {
+        // Ctrl+C
+        if (e.ctrlKey && e.key.toLowerCase() === "c") {
+          const selection = term.getSelection();
+
+          if (selection) {
+            navigator.clipboard.writeText(selection);
+          } else {
+            socket.send("\x03");
+          }
+
+          return false;
+        }
+
+        // Ctrl+V
+        if (e.ctrlKey && e.key.toLowerCase() === "v") {
+          navigator.clipboard.readText().then((text) => {
+            socket.send(text);
+          });
+
+          return false;
+        }
+
+        return true;
       });
+
+
+
+
+      
 
       term.onData((data) => {
         console.log(data, data.charCodeAt(0));
