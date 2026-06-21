@@ -1,11 +1,11 @@
 FROM python:3.13-slim
 
-ARG CACHE_BUSTER=8
+ARG CACHE_BUSTER=9
 
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && \
-    apt-get install -y nginx git curl && \
+    apt-get install -y nginx git curl htop mc && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -20,12 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN cp nginx/nginx.conf /etc/nginx/nginx.conf
 RUN cp nginx/index.html /usr/share/nginx/html/index.html
 
-RUN curl -fsSL https://raw.githubusercontent.com/kamalkavin96/huggingface-container-command/refs/heads/main/uptimekuma/start.sh \
+RUN curl -fsSL https://raw.githubusercontent.com/kamalkavin96/huggingface-container-command/refs/heads/main/jenkins/start.sh \
     -o /app/start.sh && chmod +x /app/start.sh
 
 EXPOSE 7860
 
-CMD ["/app/cmd/start.sh"]
-
-# CMD sh -c "nginx && python src/main.py && /start.sh"
-# CMD ["/start.sh"]
+CMD ["/app/start.sh"]
