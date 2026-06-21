@@ -5,6 +5,7 @@ load_dotenv(find_dotenv())
 
 
 from routers import home, auth, profile, admin, files, metrics, terminal
+from fastapi.staticfiles import StaticFiles
 from core.middleware import SecurityHeadersMiddleware
 from core.database import init_db
 from core.config import BASE_PATH
@@ -14,14 +15,13 @@ import logging
 
 
 
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s %(levelname)s %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 app = FastAPI()
 app.add_middleware(SecurityHeadersMiddleware)
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 prefix = BASE_PATH
-
 print("BASE_PATH:", BASE_PATH)
 
 app.include_router(home.router, prefix=prefix)
