@@ -1,6 +1,6 @@
 import os
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from core.config import BASE_PATH
 
 router = APIRouter()
@@ -18,3 +18,12 @@ async def home():
         html = f.read().decode("utf-8", errors="replace")
         html = html.replace("{{{BASE_PATH}}}", BASE_PATH)
     return HTMLResponse(html)
+
+@router.get("/ping")
+async def ping():
+    return JSONResponse({"message": "pong"})
+
+
+@router.get("/health")
+async def health():
+    return JSONResponse({"status": "ok"})
