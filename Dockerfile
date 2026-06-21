@@ -19,4 +19,5 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 7860
 
 # CMD ["python", "main.py"]
-CMD sh -c "nginx && python main.py"
+# CMD sh -c "nginx && python main.py"
+CMD sh -c "nginx && cd /app/src && python main.py"
