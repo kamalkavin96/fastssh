@@ -3,8 +3,6 @@
 
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
 
-  const BASE_PATH = "/terminal";
-
 /* ═══════════════════════════════════════
                 THEMES
 ═══════════════════════════════════════ */

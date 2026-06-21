@@ -19,4 +19,4 @@ RUN cp nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 7860
 
-CMD sh -c "nginx && cd /app/src && python main.py"
+CMD sh -c "nginx && python src/main.py"

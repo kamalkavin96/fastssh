@@ -21,7 +21,7 @@ app.add_middleware(SecurityHeadersMiddleware)
 
 
 app.mount(
-    "/static",
+    BASE_PATH+"/static",
     StaticFiles(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "src/static")),
     name="static"
 )
